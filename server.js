@@ -20,8 +20,54 @@ app.get('/', (req, res) => res.send('Testing 1, 2, 3'));
 
 app.get('/test', (req, res) => res.send('hello world'));
 
+app.get('/api/v1/books', (req, res) => {
+  client.query(`SELECT book_id, title, author, image_url FROM books;`)
+    .then(function(result) {
+      res.send(result.rows);
+    })
+    .catch(function(err) {
+      console.error(err)
+    })
+});
+
+createTable();
+
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
+function createTable() {
+  client.query(`
+    CREATE TABLE IF NOT EXISTS books
+    (book_id SERIAL PRIMARY KEY,
+     author VARCHAR(50) NOT NULL,
+     title VARCHAR(255) NOT NULL,
+     isbn VARCHAR(30) NOT NULL,
+      image_url VARCHAR(255) NOT NULL,
+      description TEXT NOT NULL
+    );`)
+    .then(() => {
+      loadTable();
+    })
+    .catch(err => {
+      console.error(err);
+    });
+}
+function loadTable() {
+  client.query('SELECT COUNT(*) FROM books')
+    .then(result => {
+
+      if (!parseInt(result.rows[0].count))
+        fs.readFile('./data/books.json', 'utf-8', (err, fd) => {
+          JSON.parse(fd).forEach(ele => {
+            client.query(`
+      INSERT INTO books
+      (title, author, isbn, image_url, description)
+      VALUES ($1, $2, $3, $4, $5);`,
+              [ele.title, ele.author, ele.isbn, ele.image_url, ele.description]
+            )
+          })
+        })
+    })
+}
 
 
 
