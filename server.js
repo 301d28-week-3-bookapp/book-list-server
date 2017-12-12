@@ -18,6 +18,8 @@ app.use(cors());
 
 app.get('/', (req, res) => res.send('Testing 1, 2, 3'));
 
+app.get('/test', (req, res) => res.send('hello world'));
+
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 
