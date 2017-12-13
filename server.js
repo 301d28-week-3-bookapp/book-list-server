@@ -30,6 +30,16 @@ app.get('/api/v1/books', (req, res) => {
     })
 });
 
+app.get('/api/v1/books/:id', (req, res) => {
+  client.query(`SELECT book_id, title, author, image_url, decsription FROM books WHERE book_id=${req.params.id};`)
+    .then(function(result) {
+      res.send(result.rows);
+    })
+    .catch(function(err) {
+      console.error(err)
+    })
+});
+
 createTable();
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
