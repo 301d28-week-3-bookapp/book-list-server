@@ -31,8 +31,9 @@ app.get('/api/v1/books', (req, res) => {
 });
 
 app.get('/api/v1/books/:id', (req, res) => {
-  client.query(`SELECT book_id, title, author, image_url, decsription FROM books WHERE book_id=${req.params.id};`)
+  client.query(`SELECT book_id, title, author, image_url, description FROM books WHERE book_id=${req.params.id};`)
     .then(function(result) {
+      console.log('results', result);
       res.send(result.rows);
     })
     .catch(function(err) {
