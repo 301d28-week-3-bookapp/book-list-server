@@ -44,6 +44,11 @@ app.get('/api/v1/books/:id', (req, res) => {
     })
 });
 
+app.get('/api/v1/books/:token', (req, res) => {
+  console.log('token in server', req.params.token);
+  (req.params.token === 4747) ? res.send(1) : res.send(0);
+});
+
 app.post('/api/v1/books/new', (req, res) => {
   client.query('INSERT INTO books(title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING;',
     [
