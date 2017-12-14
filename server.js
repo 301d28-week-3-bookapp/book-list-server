@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const pg = require('pg');
 const fs = require('fs');
-
+const bodyparser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT;
 const CLIENT_URL = process.env.CLIENT_URL;
@@ -33,13 +33,24 @@ app.get('/api/v1/books', (req, res) => {
 app.get('/api/v1/books/:id', (req, res) => {
   client.query(`SELECT book_id, title, author, image_url, description FROM books WHERE book_id=${req.params.id};`)
     .then(function(result) {
-      console.log('results', result);
+      // console.log('results', result);
       res.send(result.rows);
     })
     .catch(function(err) {
       console.error(err)
     })
 });
+
+app.post('/api/v1/books/new', (req, res) => {
+  client.query('INSERT INTO books(title, author, image_url, decription) VALUES ($1, S2, $3, $4) ON CONFLICT DO NOTHING;',
+    [
+      req.body.title,
+      req.body.author,
+      req.body.image_url,
+      req.body.description
+    ])
+  res.send('insert complete');
+})
 
 createTable();
 app.get('*', (req, res) => res.redirect(CLIENT_URL));

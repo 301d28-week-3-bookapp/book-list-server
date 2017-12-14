@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/301d28-week-3-bookapp/book-list-server#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "express": "^4.16.2",
     "fs": "0.0.1-security",
