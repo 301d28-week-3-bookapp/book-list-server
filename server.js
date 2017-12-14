@@ -68,12 +68,13 @@ app.delete('/api/v1/books/delete/:id', (req, res) => {
 });
 
 app.put('/api/v1/books/update/:id', (req, res) => {
-  client.query(`UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5 WHERE book_is=$6`, [
-    req.title,
-    req.author,
-    req.isbn,
-    req.image_url,
-    req.description,
+
+  client.query(`UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5 WHERE book_id=$6`, [
+    req.body.title,
+    req.body.author,
+    req.body.isbn,
+    req.body.image_url,
+    req.body.description,
     req.params.id
   ])
     .then(() => {
