@@ -28,7 +28,7 @@ app.get('/api/v1/books', (req, res) => {
     .then(function(result) {
       res.send(result.rows);
     })
-    .catch(function(err) {
+    .catch((err) => {
       console.error(err)
     })
 });
@@ -39,7 +39,7 @@ app.get('/api/v1/books/:id', (req, res) => {
       // console.log('results', result);
       res.send(result.rows);
     })
-    .catch(function(err) {
+    .catch((err) => {
       console.error(err)
     })
 });
@@ -56,8 +56,36 @@ app.post('/api/v1/books/new', (req, res) => {
   res.send('insert complete');
 })
 
-createTable();
+app.delete('/api/v1/books/delete/:id', (req, res) => {
+  client.query(`DELETE FROM books WHERE book_id=$1;`,
+    [ req.params.id])
+    .then(() => {
+      res.send('Delete Complete')
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+});
+
+app.put('/api/v1/books/update/:id', (req, res) => {
+  client.query(`UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5 WHERE book_is=$6`, [
+    req.title,
+    req.author,
+    req.isbn,
+    req.image_url,
+    req.description,
+    req.params.id
+  ])
+    .then(() => {
+      res.sendStatus(204)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+})
+
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
+createTable();
 
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
