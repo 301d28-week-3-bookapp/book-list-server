@@ -16,6 +16,9 @@ client.on('error', err => console.error(err));
 
 app.use(cors());
 
+app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.json());
+
 app.get('/', (req, res) => res.send('Testing 1, 2, 3'));
 
 app.get('/test', (req, res) => res.send('hello world'));
@@ -42,10 +45,11 @@ app.get('/api/v1/books/:id', (req, res) => {
 });
 
 app.post('/api/v1/books/new', (req, res) => {
-  client.query('INSERT INTO books(title, author, image_url, decription) VALUES ($1, S2, $3, $4) ON CONFLICT DO NOTHING;',
+  client.query('INSERT INTO books(title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING;',
     [
       req.body.title,
       req.body.author,
+      req.body.isbn,
       req.body.image_url,
       req.body.description
     ])
