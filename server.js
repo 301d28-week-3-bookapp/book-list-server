@@ -8,7 +8,7 @@ const bodyparser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT;
 const CLIENT_URL = process.env.CLIENT_URL;
-
+const TOKEN = process.env.TOKEN;
 const client = new pg.Client(process.env.DATABASE_URL);
 
 client.connect();
@@ -44,9 +44,9 @@ app.get('/api/v1/books/:id', (req, res) => {
     })
 });
 
-app.get('/api/v1/books/:token', (req, res) => {
-  console.log('token in server', req.params.token);
-  (req.params.token === 4747) ? res.send(1) : res.send(0);
+app.get('/api/v1/books/admin/:token', (req, res) => {
+
+  (req.params.token === TOKEN) ? res.send('1'): res.send('0');
 });
 
 app.post('/api/v1/books/new', (req, res) => {
