@@ -35,17 +35,6 @@ app.get('/api/v1/books', (req, res) => {
     })
 });
 
-app.get('/api/v1/books/:id', (req, res) => {
-  client.query(`SELECT book_id, title, author, isbn, image_url, description FROM books WHERE book_id=${req.params.id};`)
-    .then(function(result) {
-      // console.log('results', result);
-      res.send(result.rows);
-    })
-    .catch((err) => {
-      console.error(err)
-    })
-});
-
 app.get('/api/v1/books/admin/:token', (req, res) => {
 
   (req.params.token === TOKEN) ? res.send('1'): res.send('0');
@@ -79,6 +68,17 @@ app.get('/api/v1/books/find', (req, res) => {
     .then(arr => res.send(arr))
     .catch(console.error)
 })
+
+app.get('/api/v1/books/:id', (req, res) => {
+  client.query(`SELECT book_id, title, author, isbn, image_url, description FROM books WHERE book_id=${req.params.id};`)
+    .then(function(result) {
+      // console.log('results', result);
+      res.send(result.rows);
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+});
 
 app.post('/api/v1/books/new', (req, res) => {
   client.query('INSERT INTO books(title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING;',
